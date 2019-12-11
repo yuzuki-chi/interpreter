@@ -1,6 +1,7 @@
 # Macの不要ファイル
 .DS_Store
 
+# netbeans上の不要ファイル
 build/*
 build.xml
 manifest.mf
