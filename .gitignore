@@ -1,1 +1,8 @@
+# Macの不要ファイル
 .DS_Store
+
+build/*
+build.xml
+manifest.mf
+nbproject/*
+test/*

@@ -1,4 +1,4 @@
-package newlang3;
+package newlang4;
 
 public enum ValueType {
 	VOID,
