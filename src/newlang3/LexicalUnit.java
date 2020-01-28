@@ -2,31 +2,47 @@ package newlang3;
 
 
 public class LexicalUnit {
-        //Lexical Unit = 文字単位
-	LexicalType type;
-	Value value;
-	LexicalUnit link;
+    protected LexicalType type;
+    protected Value value;
+    protected LexicalUnit link;
 
-	public LexicalUnit(LexicalType this_type) {
-	    type = this_type;
-	}
+    /**
+     *
+     * @param this_type
+     */
+    public LexicalUnit(LexicalType this_type) {
+	type = this_type;
+    }
+    
+    /**
+     *
+     * @param this_type
+     * @param this_value
+     */
+    public LexicalUnit(LexicalType this_type, Value this_value) {
+        type = this_type;
+        value = this_value;
+    }
 	
-	public LexicalUnit(LexicalType this_type, Value this_value) {
-		type = this_type;
-		value = this_value;
-	}
+    /**
+     *
+     * @return
+     */
+    public Value getValue() {
+        return value;
+    }
 	
-	public Value getValue() {
-		return value;
-	}
-	
-	public LexicalType getType() {
-		return type;
-	}
-        
-        //この関数をprintするとここが呼ばれる便利な関数
-	public String toString() {
-		switch(type) {
+    /**
+     *
+     * @return
+     */
+    public LexicalType getType() {
+        return type;
+    }
+    
+    @Override
+    public String toString() {
+        switch(type) {
 	    case LITERAL:
             return "LITERAL:\t" + value.getSValue();
 	    case NAME:
@@ -35,42 +51,46 @@ public class LexicalUnit {
 	    	return "DOUBLEVAL:\t" + value.getSValue();
 	    case INTVAL:
 	    	return "INTVAL:\t" + value.getSValue();
+	    case BOOLVAL:
+	    	return "BOOLVAL:\t" + value.getSValue();
 	    case IF:
-            return ("IF");
+                return ("IF");
 	    case THEN:
-            return ("THEN");
+                return ("THEN");
 	    case ELSE:
-            return ("ELSE");
+                return ("ELSE");
 	    case FOR:
-            return ("FOR");
+                return ("FOR");
 	    case FORALL:
-            return ("FORALL");
+                return ("FORALL");
 	    case NEXT:
-            return ("NEXT");
+                return ("NEXT");
 	    case SUB:
-            return ("SUB");
+                return ("SUB");
 	    case DIM:
-            return ("DIM");
+                return ("DIM");
 	    case AS:
-            return ("AS");
+                return ("AS");
 	    case END:
-            return ("END");
+                return ("END");
 	    case EOF:
-            return ("EOF");
+                return ("EOF");
 	    case NL:
-            return ("NL");
+                return ("NL");
 	    case EQ:
-            return ("EQ");
+                return ("EQ");
 	    case LT:
 	    	return ("LT");
+	    case DO:
+	    	return ("DO");
+	    case FUNC:
+	    	return ("FUNC");
 	    case GT:
 	    	return ("GT");
 	    case LE:
 	    	return ("LE");
 	    case GE:
 	    	return ("GE");
-	    case DO:
-	    	return ("DO");
 	    case DOT:
 	    	return ("DOT");
 	    case WHILE:
@@ -101,7 +121,7 @@ public class LexicalUnit {
 	    	return ("NE");
 	    case ENDIF:
 	    	return ("ENDIF");
-	    }
-	    return "";
 	}
+	return "";
+    }
 }

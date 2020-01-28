@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package newlang3;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-/**
- *
- * @author yuzukiyu
- */
+
 public class LexicalAnalyzerImpl implements LexicalAnalyzer{
     PushbackReader reader; //文字をストリームにプッシュバックできる文字ストリームリーダー
     
@@ -39,6 +30,8 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
         RESERVED_WORD_MAP.put("LOOP", new LexicalUnit(LexicalType.LOOP));
         RESERVED_WORD_MAP.put("TO", new LexicalUnit(LexicalType.TO));
         RESERVED_WORD_MAP.put("WEND", new LexicalUnit(LexicalType.WEND));
+        //これらに該当しないものは"NAME"
+        
         SYMBOL_MAP.put("=", new LexicalUnit(LexicalType.EQ));
         SYMBOL_MAP.put("<", new LexicalUnit(LexicalType.LT));
         SYMBOL_MAP.put(">", new LexicalUnit(LexicalType.GT));
@@ -68,82 +61,89 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
         this.reader = new PushbackReader(inputsr);
     }
 
+    @Override
     public LexicalUnit get() throws Exception {
         
         //解析
         while(true) {
-            int ci = reader.read();
-            char c = (char) ci;
-            //System.out.println(ci + " is " + c);
-            reader.unread(ci);
+            int ci = reader.read(); // 文字をintとして読む
+            char c = (char) ci;     // int文字をcharへ変換
+            reader.unread(ci);      // 読んだciを戻す
             
             // EOF
             if (ci < 0) {
                 return new LexicalUnit(LexicalType.EOF);
                 
             } else {
-
                 // space, tab -> 無視
                 if ((c == ' ') || (c == '\t')) {
-                    //System.out.println("=>space");
+                //System.out.println("SPACE => continue");
                     reader.read();
                     continue;
                 }
 
-                // 英字
-                if ((c >= 'a' && c<= 'z') || (c >= 'A' && c <= 'Z')) return getString();
+                // 英字 -> getString();
+                if ((c >= 'a' && c<= 'z') || (c >= 'A' && c <= 'Z')) 
+                    return getString();
 
-                // 数字
-                if (c >= '0' && c <= '9') return getNumber();
+                // 数字 -> getNumber();
+                if (c >= '0' && c <= '9') 
+                    return getNumber();
 
-                // リテラル（文字列定数）
-                if (c == '"') return getLiteral();
+                // リテラル（文字列定数） -> getLiteral();
+                if (c == '"') 
+                    return getLiteral();
 
-                // シンボル
-                if (SYMBOL_MAP.containsKey(String.valueOf(c))) return getSymbol();
+                // シンボル -> getSymbol();
+                if (SYMBOL_MAP.containsKey(String.valueOf(c))) 
+                    return getSymbol();
                 // map.containsKey : Mapキー検索
 
-                throw new InternalError("ERROR : unknown code");
+                throw new InternalError("ERROR : Inputted unknown code");
             }
         }
     }
 
     //英字処理
     private LexicalUnit getString() throws Exception {
-        String target = "";
+        String target = ""; // targetにStringが追加されていく
 
         while(true) {
-            //System.out.println(target);
             int ci = reader.read();
-            char c = (char) ci;
+            char c = (char) ci;     // 1文字を読み出す
 
-            if (ci < 0) break; //EOF
+            if (ci < 0) break; // EOFがきたらString終了
   
             if ((c >= 'a' && c<= 'z') ||  (c >= 'A' && c <= 'Z') || (c >= '0'  && c <= '9')) {
                 target += c; //文字の追加
-                //System.out.println(target);
                 continue;
             }
-            reader.unread(ci);
+            reader.unread(ci);  // Stringを超えた1文字をreadしたためunread
             break;
         }
+        // この時点でtarget(1語句)が完成している
 
-        //RESERVED_WORD_MAPのキーからtargetを検索, なければ新しいLexicalUnitを返す
-        if (RESERVED_WORD_MAP.containsKey(target)) return RESERVED_WORD_MAP.get(target);
-        else return new LexicalUnit(LexicalType.NAME, new ValueImpl(target, ValueType.STRING));
+        //RESERVED_WORD_MAPのキーからtargetを検索
+        if (RESERVED_WORD_MAP.containsKey(target)) { //予約語
+            return RESERVED_WORD_MAP.get(target); //valueを返す
+        } else {
+            // 予約語ではなかったため、LexicalTypeにNAMEをもつUnitを作成.
+            ValueImpl valueImpl = new ValueImpl(target, ValueType.STRING);
+            return new LexicalUnit(LexicalType.NAME, valueImpl);
+        }
     }
     
     //数字処理
     private LexicalUnit getNumber() throws Exception {
         String target = "";
+        
         //小数点の判断Boolean
         Boolean decimalFlag = false;
 
         while(true) {
-            //System.out.println(target);
             int ci = reader.read();
 
-            if (ci < 0) break;
+            if (ci < 0) break; //EOF
             char c = (char) ci;
 
             if (c >= '0' && c <= '9') {
@@ -154,9 +154,11 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
                 target += c; //文字の追加
                 continue;
             } else if (c == '.' && decimalFlag) { //.がふたつ以上
-                throw new Exception("EROOR : too many dots");
+                throw new Exception("ERROR : Too many dots");
             }
-            reader.unread(ci);
+            
+            //この時点で数字が完成
+            reader.unread(ci); //数字が終わって次の1文字を読んでしまっているのでunread
             break;
         }
         //if (!decimalFlag) System.out.println("INT: " + target);
@@ -172,11 +174,10 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
         String target = "";
 
         while(true) {
-            //System.out.println(target);
             int ci = reader.read();
-
-            if (ci < 0) return SYMBOL_MAP.get(target);
             char c = (char) ci;
+
+            if (ci < 0) return SYMBOL_MAP.get(target); //EOF
             
             //改行処理
             if (String.valueOf(c).equals("\n")) {
@@ -184,10 +185,11 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
                 //System.out.println("NL");
             }
 
-            if (SYMBOL_MAP.containsKey(target + c)) {
+            if (SYMBOL_MAP.containsKey(target + c)) { //SYMBOL_MAPのkey検索
                 target += c;
             } else {
-                reader.unread(ci);
+                // cに余分な文字が入るとここにくる
+                reader.unread(ci); // SYMBOLが終わり, 次の1文字を読んだためunread
                 //if (target.equals("\n")) System.out.println("\\n \t=> Symbol");
                 //if (!target.equals("\n")) System.out.println(target + " => Symbol");
                 return SYMBOL_MAP.get(target);
@@ -198,8 +200,7 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
     //リテラル処理
     private LexicalUnit getLiteral() throws Exception {
         String target = "";
-        //ここで " とばせ
-        reader.read();
+        reader.read(); //ひとまず1文字目である"を飛ばす
         
         //リテラルの中身解析
         while(true) {
@@ -208,25 +209,28 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
 
             if (ci < 0) break; //EOF
             
-            //" までぶっとんでくぜ
-            if (c != '"') {
+            if (c != '"') { //次の「閉じ"」がくるまでひたすらtargetにcを入れ続ける
                 target += c;
                 continue;
             }
+            //ここの時点でtargetは完成している. 
             //System.out.println(target + " \t=> Literal");
             return new LexicalUnit(LexicalType.LITERAL, new ValueImpl(target, ValueType.STRING));
         }
-        throw new Exception("You don't closing double quote");
+        // "が閉じずに最後まで読んでしまった.
+        throw new Exception("ERROR: Not closing double quote");
     }
     
     //例外処理
+    @Override
     public boolean expect(LexicalType type) throws Exception { return true; }
 
+    @Override
     public void unget(LexicalUnit token) {
         if (token.getType() == LexicalType.NL) line--;
         lexicalUnitList.add(token);
     }
 
+    @Override
     public int getLine() { return line; }
-
 }

@@ -2,8 +2,24 @@ package newlang3;
 
 public enum ValueType {
 	VOID,
-	INTEGER,
-	STRING,
-	DOUBLE,
-	BOOL,
+
+    /**
+     * INTEGER: ValueTypeがINTEGERってことだよ 
+     */
+    INTEGER,
+
+    /**
+     * STRING: ValueTypeがSTRINGってことだよ
+     */
+    STRING,
+
+    /**
+     * DOUBLE: ValueTypeがDOUBLEってことだよ
+     */
+    DOUBLE,
+    
+    /**
+     * BOOL: ValueTypeがBOOLEANってことだよ
+     */
+    BOOL,
 }
