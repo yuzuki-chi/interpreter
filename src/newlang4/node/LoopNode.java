@@ -117,7 +117,7 @@ public class LoopNode extends Node {
 
     @Override
     public Value getValue() throws Exception {
-        if (isDo) { // exec FIRST
+        if (isDo) {
             process.getValue();
         }
         boolean flag = false;
