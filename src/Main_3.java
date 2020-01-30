@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 
 public class Main_3 {
     public static void main(String[] args) {
-        String FILEPATH = "/Users/yuzukiyu/NetBeansProjects/interpreter/src/BASIC_testcode/BASIC_code_01.bas";
+        String FILEPATH = "./src/BASIC_testcode/BASIC_code_01.bas";
         
         try {
             FileInputStream FIStream = new FileInputStream(FILEPATH);

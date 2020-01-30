@@ -64,6 +64,14 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
     @Override
     public LexicalUnit get() throws Exception {
         
+        // ungetしていたリストを確認、取り上げる
+        if (!lexicalUnitList.isEmpty()){
+            int index = lexicalUnitList.size()-1;
+            LexicalUnit unit = lexicalUnitList.get(index);
+            lexicalUnitList.remove(index);
+            return unit;
+        }
+                
         //解析
         while(true) {
             int ci = reader.read(); // 文字をintとして読む
@@ -221,14 +229,44 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer{
         throw new Exception("ERROR: Not closing double quote");
     }
     
+    /**
+     * 初期値: 1としてpeekを実行
+     * @return
+     * @throws Exception
+     */
+    public LexicalUnit peek () throws Exception {
+        return peek(1);
+    }
+
+    /**
+     *
+     * @param num
+     * @return LexicalUnit
+     * @throws Exception
+     */
+    public LexicalUnit peek(int num) throws Exception {
+        List<LexicalUnit> list = new ArrayList<>();
+        
+        // 引数回文listに解析したUnitを入れていく
+        for(int i=0; i<num; i++){
+            list.add(get());
+        }
+        LexicalUnit lexicalUnit = list.get(list.size()-1);
+        // そして例の如くunget
+        for (int i=list.size()-1; i >= 0; i--) {
+            unget(list.get(i));
+        }
+        return lexicalUnit;
+    }
+    
     //例外処理
     @Override
     public boolean expect(LexicalType type) throws Exception { return true; }
 
     @Override
     public void unget(LexicalUnit token) {
-        if (token.getType() == LexicalType.NL) line--;
-        lexicalUnitList.add(token);
+        if (token.getType() == LexicalType.NL) line--; //NLならlineを-
+        lexicalUnitList.add(token); // tokenをlistに追加
     }
 
     @Override
