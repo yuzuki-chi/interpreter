@@ -117,16 +117,14 @@ public class LoopNode extends Node {
 
     @Override
     public Value getValue() throws Exception {
+        boolean flag = false;
         if (isDo) {
             process.getValue();
         }
-        boolean flag = false;
-
+        
         while (true) {
-            if ((cond.getValue().getBValue() && !isUntil) ||
-                (!cond.getValue().getBValue() && isUntil)) {
-                flag = true;
-            }
+            flag = (cond.getValue().getBValue() && !isUntil) ||
+                   (!cond.getValue().getBValue() && isUntil);
             if (!flag) {
                 return null;
             }
