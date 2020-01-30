@@ -24,7 +24,7 @@ public class Main_4 {
                 program.parse();
                 System.out.println(program);               
             } else {
-                System.out.println("ERROR: syntax error");
+                System.out.println("ERROR: 構文が誤っているか、まだ対応していない構文を使用しています");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

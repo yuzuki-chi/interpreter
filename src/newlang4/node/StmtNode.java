@@ -34,7 +34,7 @@ public class StmtNode extends Node {
      *
      * @param type
      * @param env
-     * @return
+     * @return Node or null
      * @throws Exception
      */
     public static Node getHandler(LexicalType type, Environment env) throws Exception{

@@ -50,7 +50,7 @@ public class ConstNode extends Node {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return String.valueOf(value.getSValue());
     }
 
 }

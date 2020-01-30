@@ -39,7 +39,7 @@ public class ExprListNode extends Node {
 
     @Override
     public void parse() throws Exception {
-        LexicalType ptype = env.getInput().peek().getType();
+        LexicalType ptype = env.getInput().peek(1).getType();
         if (ExprNode.isMatch(ptype)) {
             Node handler = ExprNode.getHandler(ptype, env);
             handler.parse();
@@ -49,17 +49,17 @@ public class ExprListNode extends Node {
         }
 
         while (true) {
-            if (env.getInput().peek().getType() == LexicalType.COMMA) {
+            if (env.getInput().peek(1).getType() == LexicalType.COMMA) {
                 env.getInput().get();
             } else break;
 
-            ptype = env.getInput().peek().getType();
+            ptype = env.getInput().peek(1).getType();
             if (ExprNode.isMatch(ptype)) {
                 Node handler = ExprNode.getHandler(ptype, env);
                 handler.parse();
                 list.add(handler);
             } else {
-                throw new Exception("syntax error");
+                throw new Exception("ERROR: syntax error in ExprListNode");
             }
         }
     }
@@ -68,14 +68,17 @@ public class ExprListNode extends Node {
         return list.get(n).getValue();
     }
 
+    @Override
     public String toString() {
-        String result = "";
+        String str = "";
         for (int i=0; i < list.size(); i++){
-            result += list.get(i);
+            str += list.get(i).toString();
             if (i != list.size() -1){
-                result += ",";
+                str += ",";
             }
         }
-        return result;
+        return str;
     }
 }
+
+//a[5];LOOP [<[1 : a][PRINT[Hello];a[-[a, 1]]][]];END

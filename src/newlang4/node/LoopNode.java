@@ -120,30 +120,27 @@ public class LoopNode extends Node {
         if (isDo) { // exec FIRST
             process.getValue();
         }
+        boolean flag = false;
 
         while (true) {
-            if (!judge()) {
+            if ((cond.getValue().getBValue() && !isUntil) ||
+                (!cond.getValue().getBValue() && isUntil)) {
+                flag = true;
+            }
+            if (!flag) {
                 return null;
             }
             process.getValue();
         }
     }
 
-    private boolean judge() throws Exception {
-        if ((cond.getValue().getBValue() && !isUntil) ||
-                (!cond.getValue().getBValue() && isUntil)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public String toString() {
         String ret = "";
+        // ex: LOOP[<[1]:[a]][PRINT[Hello]a[-[a,1]]]
         ret += "LOOP[";
         ret += cond;
-        ret += "][" + process.toString() + "];";
+        ret += "][" + process.toString() + "]";
         return ret;
     }
 }

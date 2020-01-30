@@ -96,6 +96,7 @@ public class StmtListNode extends Node {
         }
     }
 
+    @Override
     public Value getValue() throws Exception {
         for (Node node : list) {
             node.getValue();
@@ -105,6 +106,7 @@ public class StmtListNode extends Node {
 
     @Override
     public String toString() {
+        //ex: a
         String str = "";
         for (int i = 0; i< list.size(); i++) {
             str += list.get(i).toString();

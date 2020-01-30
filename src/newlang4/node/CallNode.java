@@ -73,7 +73,8 @@ public class CallNode extends Node {
 
     @Override
     public String toString() {
-        return funcName + arguments + ";";
+        //ex: funcName[arguments];
+        return funcName + arguments;
     }
 }
 

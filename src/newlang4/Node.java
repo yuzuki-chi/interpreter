@@ -27,6 +27,7 @@ public abstract class Node {
         return null;
     }
 
+    @Override
     public String toString() {
     	if (type == NodeType.END) return "END";
     	else return "Node";        

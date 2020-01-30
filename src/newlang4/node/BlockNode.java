@@ -35,4 +35,8 @@ public class BlockNode extends Node {
         else if (LoopNode.isMatch(type)) return LoopNode.getHandler(type, env);
         else throw new Exception("syntax error");
     }
+    
+    public String toString() {
+        return "block";
+    }
 }

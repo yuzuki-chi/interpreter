@@ -30,7 +30,7 @@ public class EndNode extends Node {
 
     public void parse() throws Exception {
         if (env.getInput().get().getType()!=LexicalType.END){
-            throw new InternalError("ERROR : NOT END.");
+            throw new InternalError("ERROR: NOT END.");
         }
     }
 

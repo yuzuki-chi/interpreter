@@ -211,13 +211,17 @@ public class ExprNode extends Node {
     public String toString() {
         String op = "";
         String str = "";
+        
+        // 演算子operatorの有無
         if (operator!=null){
             if (operator == operator.ADD) op = "+";
             else if (operator == operator.SUB) op = "-";
             else if (operator == operator.MUL) op = "*";
-            else if (operator == operator.DIV) op = "/";            
-            str = "[" + op + "[" + left + "," + right + "]]";
+            else if (operator == operator.DIV) op = "/"; 
+            //ex: [+[1,2]]
+            str = "[" + op + "[" + left + "," + right.toString() + "]]";
         }else{
+            //ex: [a]
             str = "[" + left + "]";
         } 
         return str;
