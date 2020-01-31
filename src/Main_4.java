@@ -1,8 +1,7 @@
+import java.io.FileInputStream;
 import newlang3.*;
 import newlang4.*;
 import newlang4.node.*;
-
-import java.io.FileInputStream;
 
 public class Main_4 {
     public static void main(String[] args) throws Exception {
