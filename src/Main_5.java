@@ -7,7 +7,7 @@ public class Main_5 {
     public static void main(String[] args) throws Exception {
         String FILEPATH = "./src/BASIC_testcode/BASIC_code_01.bas";
 
-        System.out.println("basic parser");
+        //System.out.println("basic parser");
 
         try {
             FileInputStream FIStream = new FileInputStream(FILEPATH);
@@ -17,9 +17,12 @@ public class Main_5 {
             lexicalAnalyzerImpl.unget(lexicalUnit);
             Environment env = new Environment(lexicalAnalyzerImpl);
             
-            Node program = ProgramNode.getHandler(lexicalAnalyzerImpl.peek(1).getType(), env);
+            Node program = ProgramNode.getHandler(lexicalUnit.getType(), env);
             if (program != null) { 
                 program.parse();
+                System.out.println("-- Syntax Analyzer ---");
+                System.out.println(program);
+                System.out.println("-- Interpreter --");
                 System.out.println(program.getValue());
             } else { 
                 System.out.println("ERROR: 構文が誤っているか、まだ対応していない構文を使用しています");
